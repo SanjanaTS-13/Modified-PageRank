@@ -1,0 +1,10 @@
+#Create RMat Graph
+BEGIN
+Call snap.GenRMat() 
+For each edge in graph
+    Add source node to Source list
+    Add destination node to Destination list
+Set Time = List of random numbers in range(0,number of edges)
+Set DF = Dataframe of Source, Destination, Time
+Create Networkx Graph from Pandas Dataframe DF
+END
