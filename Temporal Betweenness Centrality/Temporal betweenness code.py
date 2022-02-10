@@ -1,44 +1,34 @@
 #!/usr/bin/env python
 # coding: utf-8
-
-# In[1]:
-
-
 import numpy as np
 import pandas as pd
 import networkx as nx
-
-
-# In[3]:
-
-
-#Ignore the warning
+import csv
+import sys
 import teneto
-
-
-# In[4]:
-
-
-#Generate a dataframe for the graph or use any graph generators and convert to dataframe
-np.random.seed(1245)
-df = pd.DataFrame(np.random.randint(0,56,size=(56, 3)), columns=['i','j','t'])
-
-
-# In[9]:
-
-
-graph= teneto.TemporalNetwork(from_df=df,nettype='bd')
-
-
-# In[ ]:
-
-
-bwc = teneto.networkmeasures.temporal_betweenness_centrality(tnet = graph, calc='overtime')
-bwc
-
-
-# In[11]:
+import os
 
 
 #https://teneto.readthedocs.io/en/latest/api/teneto.networkmeasures.temporal_betweenness_centrality.html#teneto.networkmeasures.temporal_betweenness_centrality
+def outputTBWC(graphPath):
+    df = pd.read_csv(graphPath, usecols=['i', 'j', 't'])
+    graph= teneto.TemporalNetwork(from_df=df,nettype='bd')
+    print(graph)
+    bwc = teneto.networkmeasures.temporal_betweenness_centrality(tnet = graph, calc='overtime')
+    print(bwc)
 
+
+
+directory = '/home/bhagat_aryaman/Modified-PageRank/Datasets'
+
+ 
+# iterate over files in
+# that directory
+for filename in os.listdir(directory):
+    f = os.path.join(directory, filename)
+    # checking if it is a file
+    if os.path.isfile(f):
+        outputTBWC(f)
+
+
+    
