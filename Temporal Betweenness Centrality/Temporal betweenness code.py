@@ -19,7 +19,7 @@ def outputTBWC(graphPath):
 
 
 
-directory = '/home/bhagat_aryaman/Modified-PageRank/Datasets'
+directory = '/home/bhagat_aryaman/Modified-PageRank/smallDatasets'
 
  
 # iterate over files in

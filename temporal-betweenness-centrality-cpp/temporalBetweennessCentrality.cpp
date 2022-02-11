@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iterator>
 #include <algorithm>
+#include <fstream>
 
 typedef boost::property<boost::edge_weight_t, int> EdgeWeightProperty;
 typedef boost::adjacency_list<boost::listS, boost::vecS, boost::directedS, boost::no_property> DirectedGraph;
@@ -26,7 +27,7 @@ void printGraph(vector<int> adj[], int V)
         printf("\n");
     }
 }
-int main()
+int main(int argc, char*argv[])
 {
     //input the temporal graph
     //roll it out as in the paper TODO: cite paper
@@ -41,18 +42,22 @@ int main()
     int V; //number of vertices
     int E; //number of edges
     int t; //time at which temporal centrality is required
-
-    cin >> w >> V >> E >> tMin >> tMax;
+    
+    
+    std::ifstream myfile (argv[1]);
+    myfile >> w >> V >> E >> tMin >> tMax;
+    cout << w << " " << V << " " << E << " " << tMin << " " << tMax;
     int W = (tMax-tMin)/w;
     vector<int> temporalGraph[W+1][V];
     int tempi, tempj, tempt;
     for(int i = 0; i < E; i++)
     {
-        cin >> tempi >> tempj >> tempt;
+        myfile >> tempi >> tempj >> tempt;
         temporalGraph[((tempt-tMin)/w)][tempj].push_back(tempi);
         temporalGraph[((tempt-tMin)/w)][tempi].push_back(tempj);
+        //cout << "hello\n";
+        //cout.flush();
     }
-
 
     for(int i = 0; i <= W; i++) printGraph(temporalGraph[i], V);
 
@@ -77,25 +82,31 @@ int main()
     std::cout << "Number of edges = " << num_edges(g) << "\n";
     std::cout << "Edge list:\n";
  
-    std::copy( ei.first, ei.second,
-                std::ostream_iterator<boost::adjacency_list<>::edge_descriptor>{
-                    std::cout, "\n"});
+    //std::copy( ei.first, ei.second,
+    //            std::ostream_iterator<boost::adjacency_list<>::edge_descriptor>{
+    //                std::cout, "\n"});
  
-    std::cout << std::endl;
+    //std::cout << std::endl;
 
     boost::shared_array_property_map<double, boost::property_map<DirectedGraph, boost::vertex_index_t>::const_type>
     centrality_map(num_vertices(g), get(boost::vertex_index, g));
     
     brandes_betweenness_centrality(g, centrality_map);
+    float sum[V];
+    float norm = 0;
     for (int v = 0; v < V; ++v)
     {
-        sum = 0;
+        sum[v] = 0;
         for(int i = 0; i <= W+1; i++)
         {
-            sum += centrality_map[v+(i*v)];
+            sum[v] += centrality_map[v+(i*v)];
             //cout << centrality_map[v + (i*V)]<< " ";
         }
-        cout << sum << " ";
+        norm += sum[v];
+    }
+    for(int i = 0; i < V; i++)
+    {
+        cout << sum[i]/norm << " ";
     }
 
 }
