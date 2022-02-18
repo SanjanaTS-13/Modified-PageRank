@@ -7,10 +7,10 @@ with open(sys.argv[1], "r") as myfile:
 del data[0]
 
 tMin = "0"
-tMax = "0"
+tMax = "16"
 w = "1"
-V = "47"
-E = "64"
+V = "11"
+E = "12"
 
 print(w + " " + V + " " + E + " " + tMin + " " + tMax)
 for i, ele in enumerate(data):
